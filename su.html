@@ -1,0 +1,113 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>العمدي الإخباري</title>
+  <style>
+    body{margin:0;font-family:Tahoma;background:#f4f6fa;color:#111}
+    header{background:#0b63d6;color:#fff;padding:14px;position:sticky;top:0;z-index:10}
+    nav a{color:#fff;margin:0 10px;text-decoration:none;font-weight:bold}
+    .container{max-width:1100px;margin:auto;padding:16px}
+    .breaking{background:#ff3b30;color:#fff;padding:10px;font-weight:bold;border-radius:8px;margin:10px 0}
+    .search-box{margin:10px 0}
+    input.search{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}
+    .card{background:#fff;padding:12px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.06)}
+    .card img{width:100%;border-radius:10px}
+    footer{background:#0b63d6;color:#fff;text-align:center;padding:16px;margin-top:20px}
+    .video-frame{width:100%;height:260px;border-radius:10px;border:none}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+    <div style="font-size:22px;font-weight:bold">العمدي الإخباري</div>
+    <nav>
+      <a href="#home">الرئيسية</a>
+      <a href="#videos">فيديوهات</a>
+      <a href="#articles">الأخبار</a>
+      <a href="#top">الأكثر قراءة</a>
+      <a href="#contact">تواصل</a>
+    </nav>
+  </div>
+</header><div class="container">  <div class="breaking" id="breakingBox">🔴 عاجل: تحديثات جديدة سيتم نشرها قريباً…</div>  <div class="search-box">
+    <input class="search" id="searchInput" placeholder="ابحث في الأخبار...">
+  </div>  <h2 id="home">آخر الأخبار</h2>
+  <div class="grid" id="newsList"></div>  <h2 id="top" style="margin-top:30px">الأكثر قراءة</h2>
+  <div class="grid" id="topReads"></div>  <h2 id="videos" style="margin-top:30px">فيديوهات</h2>
+  <div class="grid" id="videoList"></div>  <h2 id="articles" style="margin-top:30px">جميع المقالات</h2>
+  <div class="grid" id="allArticles"></div>  <h2 id="contact" style="margin-top:30px">تواصل معنا</h2>
+  <div class="card">
+    <input id="name" placeholder="الاسم" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin:5px 0">
+    <textarea id="msg" placeholder="رسالتك" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;height:120px;margin:5px 0"></textarea>
+    <button id="sendBtn" style="padding:10px 16px;background:#0b63d6;color:#fff;border:none;border-radius:8px;font-weight:bold">إرسال</button>
+    <div id="sentMsg" style="color:green;display:none;margin-top:10px">تم استلام رسالتك</div>
+  </div></div><footer>© العمدي الإخباري 2025</footer><script>
+// بيانات وهمية للأخبار
+const news = [
+  {id:1,title:"انفراج سياسي جديد في المنطقة",img:"https://picsum.photos/id/101/400/250",text:"تفاصيل حول التحركات السياسية الأخيرة…"},
+  {id:2,title:"تقرير اجتماعي حول معيشة المواطنين",img:"https://picsum.photos/id/102/400/250",text:"ارتفاع الأسعار وتأثيرها…"},
+  {id:3,title:"مظاهرات حاشدة في العاصمة",img:"https://picsum.photos/id/103/400/250",text:"خرج المئات اليوم للمطالبة…"},
+];
+
+const videos = [
+  {title:"مؤتمر صحفي للحكومة",src:"https://www.youtube.com/embed/dQw4w9WgXcQ"},
+  {title:"لقطات من الشارع اليمني",src:"https://www.youtube.com/embed/ysz5S6PUM-U"}
+];
+
+function render(){
+  const list = document.getElementById('newsList');
+  list.innerHTML = news.map(n=>`
+    <div class="card" onclick="openArticle(${n.id})">
+      <img src="${n.img}">
+      <h3>${n.title}</h3>
+      <p>${n.text}</p>
+    </div>`).join('');
+
+  document.getElementById('allArticles').innerHTML = list.innerHTML;
+
+  document.getElementById('topReads').innerHTML = news.map(n=>`
+    <div class="card">
+      <h4>${n.title}</h4>
+      <p>${n.text}</p>
+    </div>`).join('');
+
+  document.getElementById('videoList').innerHTML = videos.map(v=>`
+    <div class="card">
+      <h4>${v.title}</h4>
+      <iframe class="video-frame" src="${v.src}" allowfullscreen></iframe>
+    </div>`).join('');
+}
+render();
+
+function openArticle(id){
+  const a = news.find(n=>n.id===id);
+  if(!a) return;
+  document.body.innerHTML = `
+    <div class='container' style='padding:20px'>
+      <h1>${a.title}</h1>
+      <img src='${a.img}' style='width:100%;border-radius:10px;margin:10px 0'>
+      <p>${a.text.repeat(10)}</p>
+      <a href='/' style='display:inline-block;margin-top:20px;font-weight:bold;color:#0b63d6'>عودة للرئيسية</a>
+    </div>`;
+}
+
+document.getElementById("searchInput").addEventListener("input", e=>{
+  const q = e.target.value.trim();
+  document.getElementById('newsList').innerHTML = news.filter(n=>n.title.includes(q)||n.text.includes(q)).map(n=>`
+    <div class="card" onclick="openArticle(${n.id})">
+      <img src="${n.img}">
+      <h3>${n.title}</h3>
+      <p>${n.text}</p>
+    </div>`).join('');
+});
+
+// تواصل
+sendBtn.onclick = ()=>{
+  sentMsg.style.display = "block";
+  setTimeout(()=> sentMsg.style.display="none", 2000);
+};
+</script></body>
+</html>
